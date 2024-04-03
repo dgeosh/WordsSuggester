@@ -54,12 +54,8 @@
             async function update(prompt) {
                 let suggestions = tst.suggest(prompt).split(/\r?\n/);
                 suggestions.sort();
-                let str = "";
-                for (let i = 0; i < maxSize.value; i++) {
-                    if (suggestions[i] == undefined) break;
-                    str += suggestions[i] + "\n";
-                }
-                sug.innerText = str;
+                suggestions.splice(maxSize.value);
+                sug.innerText = suggestions.join("\n");
             }
         </script>
     </body>
