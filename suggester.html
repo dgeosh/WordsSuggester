@@ -6,6 +6,7 @@
         <script src="StringTST.js"></script>
         <script type="text/javascript">
             let tst = new TST();
+            //insert words into TST
             async function main() {
                 const data = await getList();
                 split = data.split("\r\n");
@@ -13,13 +14,17 @@
                     tst.put(element);
                 });
             }
+            //retrieves list of words
             async function getList() {
                 const requestOptions = {
                     method: "GET",
                     redirect: "follow",
                 };
                 let words;
+                //thank you dwyl and infochimps :)
+                //https://github.com/dwyl/english-words/blob/master/words_alpha.txt
                 await fetch(
+                    /*and also thank you JSDelivr*/
                     "https://cdn.jsdelivr.net/gh/dwyl/english-words/words_alpha.txt",
                     requestOptions
                 )
@@ -32,7 +37,13 @@
         </script>
     </head>
     <body>
+        <!--Made by me!!-->
+        <p style="background-color:slateblue; color: antiquewhite">
+            Made by Josh. -->
+            <a href="https://github.com/dgeosh/WordsSuggester" style="color:antiquewhite">Repo</a>
+        </p>
         <span>Max number of suggestions:</span>
+        <!--Take input for max # suggestions-->
         <input
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
             type="number"
@@ -41,16 +52,19 @@
             id="maxSuggest"
         />
         <br /><br />
+        <!--Take input for suggestion prompt (what to run autocomplete on)-->
         <input
             type="text"
             placeholder="Enter word here"
             maxlength="50"
             oninput="javascript: update(this.value)"
         />
+        <!--Put the suggestions here-->
         <p id="suggestions"></p>
         <script type="text/javascript">
             let sug = document.getElementById("suggestions");
             let maxSize = document.getElementById("maxSuggest");
+            //function for updating the suggestions as you type into the input box!
             async function update(prompt) {
                 let suggestions = tst.suggest(prompt).split(/\r?\n/);
                 suggestions.sort();
