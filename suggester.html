@@ -1,0 +1,66 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="StringTST.js"></script>
+        <script type="text/javascript">
+            let tst = new TST();
+            async function main() {
+                const data = await getList();
+                split = data.split("\r\n");
+                split.forEach((element) => {
+                    tst.put(element);
+                });
+            }
+            async function getList() {
+                const requestOptions = {
+                    method: "GET",
+                    redirect: "follow",
+                };
+                let words;
+                await fetch(
+                    "https://cdn.jsdelivr.net/gh/dwyl/english-words/words_alpha.txt",
+                    requestOptions
+                )
+                    .then((response) => response.text())
+                    .then((result) => (words = result))
+                    .catch((error) => console.error(error));
+                return words;
+            }
+            main();
+        </script>
+    </head>
+    <body>
+        <span>Max number of suggestions:</span>
+        <input
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            type="number"
+            maxlength="6"
+            value="5"
+            id="maxSuggest"
+        />
+        <br /><br />
+        <input
+            type="text"
+            placeholder="Enter word here"
+            maxlength="50"
+            oninput="javascript: update(this.value)"
+        />
+        <p id="suggestions"></p>
+        <script type="text/javascript">
+            let sug = document.getElementById("suggestions");
+            let maxSize = document.getElementById("maxSuggest");
+            async function update(prompt) {
+                let suggestions = tst.suggest(prompt).split(/\r?\n/);
+                suggestions.sort();
+                let str = "";
+                for (let i = 0; i < maxSize.value; i++) {
+                    if (suggestions[i] == undefined) break;
+                    str += suggestions[i] + "\n";
+                }
+                sug.innerText = str;
+            }
+        </script>
+    </body>
+</html>
